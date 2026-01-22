@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shop Billing Software</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0f172a;
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: #020617;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+}
+
+h1 {
+  text-align: center;
+}
+
+input, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+}
+
+.list {
+  margin-top: 20px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #1e293b;
+}
+
+.total {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.clear {
+  background: #dc2626;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🧾 Shop Billing</h1>
+
+  <input id="itemName" placeholder="Item name">
+  <input id="itemPrice" type="number" placeholder="Price">
+
+  <button onclick="addItem()">Add Item</button>
+
+  <div class="list" id="list"></div>
+
+  <div class="total">
+    Total: ₹ <span id="total">0</span>
+  </div>
+
+  <button onclick="window.print()">Print Bill</button>
+  <button class="clear" onclick="clearBill()">Clear Bill</button>
+</div>
+
+<script>
+let total = 0;
+
+function addItem() {
+  const name = document.getElementById("itemName").value;
+  const price = Number(document.getElementById("itemPrice").value);
+
+  if (!name || !price) return;
+
+  const list = document.getElementById("list");
+
+  const div = document.createElement("div");
+  div.className = "item";
+  div.innerHTML = `<span>${name}</span><span>₹${price}</span>`;
+  list.appendChild(div);
+
+  total += price;
+  document.getElementById("total").innerText = total;
+
+  document.getElementById("itemName").value = "";
+  document.getElementById("itemPrice").value = "";
+}
+
+function clearBill() {
+  document.getElementById("list").innerHTML = "";
+  total = 0;
+  document.getElementById("total").innerText = total;
+}
+</script>
+
+</body>
+</html>

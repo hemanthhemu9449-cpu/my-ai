@@ -4,101 +4,168 @@
 <meta charset="UTF-8">
 <title>My AI Assistant</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: #0f172a;
-  color: white;
+  color: #fff;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   height: 100vh;
 }
 
-.container {
-  width: 95%;
-  max-width: 500px;
-  background: #020617;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
-}
-
-h1 {
+header {
+  padding: 15px;
   text-align: center;
-  color: #38bdf8;
+  font-weight: bold;
+  font-size: 20px;
+  background: #020617;
+  border-bottom: 1px solid #1e293b;
 }
 
-.chat {
-  height: 300px;
+#chat {
+  flex: 1;
   overflow-y: auto;
-  border: 1px solid #1e293b;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .msg {
-  margin-bottom: 10px;
+  max-width: 80%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  animation: fadeIn 0.2s ease;
 }
 
 .user {
-  color: #facc15;
+  align-self: flex-end;
+  background: #2563eb;
 }
 
-.bot {
-  color: #4ade80;
+.ai {
+  align-self: flex-start;
+  background: #020617;
+  border: 1px solid #1e293b;
+}
+
+.typing {
+  display: inline-block;
+}
+
+.typing span {
+  animation: blink 1.4s infinite both;
+  font-size: 20px;
+}
+.typing span:nth-child(2) { animation-delay: .2s; }
+.typing span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes blink {
+  0% { opacity: .2; }
+  20% { opacity: 1; }
+  100% { opacity: .2; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+footer {
+  display: flex;
+  padding: 10px;
+  gap: 10px;
+  background: #020617;
+  border-top: 1px solid #1e293b;
 }
 
 input {
-  width: 75%;
-  padding: 10px;
+  flex: 1;
+  padding: 12px;
   border-radius: 10px;
   border: none;
   outline: none;
+  font-size: 16px;
 }
 
 button {
-  width: 23%;
-  padding: 10px;
-  border-radius: 10px;
+  background: #2563eb;
   border: none;
-  background: #38bdf8;
-  font-weight: bold;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 16px;
 }
 </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h1>My AI Assistant</h1>
+<header>My AI Assistant</header>
 
-  <div class="chat" id="chat"></div>
+<div id="chat"></div>
 
-  <div style="display:flex; gap:5px;">
-    <input id="input" placeholder="Ask something...">
-    <button onclick="send()">Send</button>
-  </div>
-</div>
+<footer>
+  <input id="input" placeholder="Ask anything..." />
+  <button onclick="send()">Send</button>
+</footer>
 
 <script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+
+// Load history
+let history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+history.forEach(m => addMsg(m.text, m.type));
+
+function save() {
+  localStorage.setItem("chatHistory", JSON.stringify(history));
+}
+
+function addMsg(text, type) {
+  const div = document.createElement("div");
+  div.className = "msg " + type;
+  div.innerText = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function addTyping() {
+  const div = document.createElement("div");
+  div.className = "msg ai";
+  div.id = "typing";
+  div.innerHTML = `<span class="typing"><span>.</span><span>.</span><span>.</span></span>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById("typing");
+  if (t) t.remove();
+}
+
 function send() {
-  const input = document.getElementById("input");
-  const chat = document.getElementById("chat");
+  const text = input.value.trim();
+  if (!text) return;
 
-  if (input.value.trim() === "") return;
-
-  chat.innerHTML += `<div class="msg user">You: ${input.value}</div>`;
-
-  let reply = "I am a demo AI. API is not connected yet.";
-
-  setTimeout(() => {
-    chat.innerHTML += `<div class="msg bot">AI: ${reply}</div>`;
-    chat.scrollTop = chat.scrollHeight;
-  }, 500);
+  addMsg(text, "user");
+  history.push({ text, type: "user" });
+  save();
 
   input.value = "";
+
+  addTyping();
+
+  setTimeout(() => {
+    removeTyping();
+    const reply = "I am a demo AI. Real AI API will be connected soon.";
+    addMsg(reply, "ai");
+    history.push({ text: reply, type: "ai" });
+    save();
+  }, 1200);
 }
 </script>
 

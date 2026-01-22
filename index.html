@@ -229,7 +229,52 @@ function renderHistory(){
     historyBox.appendChild(d);
   });
 }
+function getSmartReply(q){
+  q = q.toLowerCase();
 
+  if(q.includes("hello") || q.includes("hi")) {
+    return "Hello 👋 How can I help you today?";
+  }
+
+  if(q.includes("your name")) {
+    return "I am your personal AI assistant.";
+  }
+
+  if(q.includes("who made you")) {
+    return "I was built by Hemanth using AI tools 😎";
+  }
+
+  if(q.includes("time")) {
+    return "Current time is: " + new Date().toLocaleTimeString();
+  }
+
+  if(q.includes("date")) {
+    return "Today's date is: " + new Date().toDateString();
+  }
+
+  if(q.includes("help")) {
+    return "You can ask me things like: time, date, who are you, or just chat with me.";
+  }
+
+  if(q.includes("sad") || q.includes("depressed")) {
+    return "I'm here for you. You are not alone. Things will get better ❤️";
+  }
+
+  if(q.includes("thank")) {
+    return "You're welcome 😊";
+  }
+
+  // Default reply
+  const randomReplies = [
+    "Interesting 🤔 Tell me more.",
+    "I am still learning. Can you explain that?",
+    "That sounds cool!",
+    "Hmm... let me think about that.",
+    "I don't fully understand yet, but I'm improving every day."
+  ];
+
+  return randomReplies[Math.floor(Math.random() * randomReplies.length)];
+  }
 function loadChat(i){
   currentChat=i;
   chatBox.innerHTML="";
@@ -280,7 +325,7 @@ function send(){
 
   setTimeout(()=>{
     removeTyping();
-    const reply="This is a premium UI demo. Real AI brain will be connected soon.";
+    const reply = getSmartReply(text);
     addMsg(reply,"ai");
     chats[currentChat].messages.push({text:reply, type:"ai"});
     save(); renderHistory();

@@ -92,22 +92,26 @@ let total = 0;
 function addItem() {
   const name = document.getElementById("itemName").value;
   const price = Number(document.getElementById("itemPrice").value);
+  const qty = Number(document.getElementById("itemQty").value);
 
-  if (!name || !price) return;
+  if (!name || !price || !qty) return;
+
+  const itemTotal = price * qty;
 
   const list = document.getElementById("list");
 
   const div = document.createElement("div");
   div.className = "item";
-  div.innerHTML = `<span>${name}</span><span>₹${price}</span>`;
+  div.innerHTML = `<span>${name} × ${qty}</span><span>₹${itemTotal}</span>`;
   list.appendChild(div);
 
-  total += price;
+  total += itemTotal;
   document.getElementById("total").innerText = total;
 
   document.getElementById("itemName").value = "";
   document.getElementById("itemPrice").value = "";
-}
+  document.getElementById("itemQty").value = 1;
+  }
 
 function clearBill() {
   document.getElementById("list").innerHTML = "";

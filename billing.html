@@ -69,6 +69,7 @@ button {
 
 <div class="container">
   <h1 id="shopTitle">🧾 Shop Billing</h1>
+  <p id="billNo">Bill No: #1</p>
 <input id="shopName" placeholder="Enter Shop Name">
 
   <input id="itemName" placeholder="Item name">
@@ -89,7 +90,9 @@ button {
 
 <script>
 let total = 0;
-
+let billNumber = Number(localStorage.getItem("billNumber") || 1);
+  
+document.getElementById("billNo").innerText = "Bill No: #" + billNumber;
 function addItem() {
   const name = document.getElementById("itemName").value;
   const price = Number(document.getElementById("itemPrice").value);
@@ -124,6 +127,9 @@ function clearBill() {
   document.getElementById("list").innerHTML = "";
   total = 0;
   document.getElementById("total").innerText = total;
+  billNumber++;
+localStorage.setItem("billNumber", billNumber);
+document.getElementById("billNo").innerText = "Bill No: #" + billNumber;
 }
   function deleteItem(btn, amount) {
   const itemDiv = btn.parentElement.parentElement;
@@ -137,3 +143,4 @@ function clearBill() {
 
 </body>
 </html>
+
